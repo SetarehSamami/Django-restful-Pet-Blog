@@ -4,6 +4,7 @@ from .managers import UserManager
 
 
 
+
 class User(AbstractBaseUser):
     username=models.CharField(max_length=15, unique=True)
     age=models.SmallIntegerField()
