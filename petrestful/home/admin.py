@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import Person
+from .models import Post,Category,Comment,Answer
 
 
-admin.site.register(Person)
+admin.site.register(Post)
+admin.site.register(Category)
+admin.site.register(Comment)
+admin.site.register(Answer)
