@@ -6,7 +6,6 @@ User = settings.AUTH_USER_MODEL
 
 class Category(models.Model):
     animal_type = models.CharField(max_length=15)
-    race=models.CharField(max_length=15)  #optional=True
     
     def __str__(self):
         return self.animal_type
@@ -16,6 +15,7 @@ class Post(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE)
     title=models.CharField(max_length=20)
     description=models.TextField()
+    race=models.CharField(max_length=15, blank=True)  
     image=models.ImageField(upload_to='petimage/')
     animal_age=models.DateTimeField()
     created = models.DateTimeField(auto_now_add=True)
