@@ -10,7 +10,12 @@ from .serializers import PostSerializer, CategorySerializer, CommentSerializer, 
 
 
 class PostListView(APIView):
+    '''
+    List of Posts.
+    '''
+
     pagination_class= PageNumberPagination
+    serializer_class = PostSerializer
 
     def get(self,request):
         post=Post.objects.all()
@@ -20,7 +25,12 @@ class PostListView(APIView):
         return Response(data=ser_data.data)
 
 class PostCreateView(APIView):   
+    '''
+    Create a new Post.
+    '''
+
     permission_classes=[IsAuthenticated,] 
+    serializer_class = PostSerializer
 
     def post(self,request):
         ser_data=PostSerializer(data=request.POST)
@@ -30,7 +40,12 @@ class PostCreateView(APIView):
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class PostUpdateView(APIView):
+    '''
+    Update Post.
+    '''
+
     permission_classes=[IsOwnerOrReadOnly,] 
+    serializer_class = PostSerializer
     
     def put(self,request,pk):
         post=Post.objects.get(pk=pk)
@@ -41,8 +56,13 @@ class PostUpdateView(APIView):
             return Response(ser_data.data,status=status.HTTP_201_CREATED)
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
-class PostDeleteView(APIView):     
+class PostDeleteView(APIView): 
+    '''
+    Delete Post.
+    '''
+    
     permission_classes=[IsOwnerOrReadOnly,] 
+    serializer_class = PostSerializer
    
     def delete(self,request,pk):
         post=Post.objects.get(pk=pk)
@@ -51,7 +71,13 @@ class PostDeleteView(APIView):
         return Response({'message':'post deleted!'}, status=status.HTTP_200_OK)
 
 class CategoryListView(APIView):
+    '''
+    List of Categories.
+    '''
+
+
     pagination_class= PageNumberPagination
+    serializer_class = CategorySerializer
 
     def get(self,request):
         category=Category.objects.all()
@@ -61,7 +87,12 @@ class CategoryListView(APIView):
         return Response(data=ser_data.data)
     
 class CategoryCreateView(APIView): 
-    permission_classes=[IsAdminUser,] 
+    '''
+    Create a new Category.
+    '''
+
+    permission_classes=[IsAdminUser,]
+    serializer_class = CategorySerializer 
 
     def post(self,request):
         ser_data=CategorySerializer(data=request.POST)
@@ -71,7 +102,12 @@ class CategoryCreateView(APIView):
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class CategoryUpdateView(APIView): 
+    '''
+    Update Category.
+    '''
+
     permission_classes=[IsAdminUser,] 
+    serializer_class = CategorySerializer
 
     def put(self,request,pk):
         category=Category.objects.get(pk=pk)
@@ -82,7 +118,12 @@ class CategoryUpdateView(APIView):
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class CategoryDeleteView(APIView):
+    '''
+    Delete Category.
+    '''
+    
     permission_classes=[IsAdminUser,] 
+    serializer_class = CategorySerializer
 
     def delete(self,request,pk):
         category=Category.objects.get(pk=pk)
@@ -90,7 +131,13 @@ class CategoryDeleteView(APIView):
         return Response({'message':'Category deleted!'}, status=status.HTTP_200_OK)
 
 class CommentListView(APIView):
+    '''
+    List of Comments.
+    '''
+
     pagination_class= PageNumberPagination
+    serializer_class = CommentSerializer
+
 
     def get(self,request):
         comment=Comment.objects.all()
@@ -100,7 +147,12 @@ class CommentListView(APIView):
         return Response(data=ser_data.data)
 
 class CommentCreateView(APIView):  
+    '''
+    Create a new Comment.
+    '''
+
     permission_classes=[IsAuthenticated,] 
+    serializer_class = CommentSerializer
   
     def post(self,request):
         ser_data=CommentSerializer(data=request.POST)
@@ -110,7 +162,12 @@ class CommentCreateView(APIView):
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class CommentUpdateView(APIView):
+    '''
+    Update Comment.
+    '''
+
     permission_classes=[IsOwnerOrReadOnly,] 
+    serializer_class = CommentSerializer
     
     def put(self,request,pk):
         comment=Comment.objects.get(pk=pk)
@@ -122,7 +179,12 @@ class CommentUpdateView(APIView):
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class CommentDeleteView(APIView):  
+    '''
+    Delete Comment.
+    '''
+    
     permission_classes=[IsOwnerOrReadOnly,] 
+    serializer_class = CommentSerializer
       
     def delete(self,request,pk):
         comment=Comment.objects.get(pk=pk)
@@ -131,7 +193,12 @@ class CommentDeleteView(APIView):
         return Response({'message':'Comment deleted!'}, status=status.HTTP_200_OK)
         
 class AnswerListView(APIView):
+    '''
+    List of Answers.
+    '''
+
     pagination_class= PageNumberPagination
+    serializer_class = AnswerSerializer
 
     def get(self,request):
         answer=Answer.objects.all()
@@ -140,8 +207,13 @@ class AnswerListView(APIView):
         ser_data=AnswerSerializer(instance=result_page , many=True)
         return Response(data=ser_data.data)
 
-class AnswerCreateView(APIView):    
+class AnswerCreateView(APIView):
+    '''
+    Create a new Answer.
+    '''
+    
     permission_classes=[IsAuthenticated,] 
+    serializer_class = AnswerSerializer
 
     def post(self,request):
         ser_data=AnswerSerializer(data=request.POST)
@@ -150,8 +222,13 @@ class AnswerCreateView(APIView):
             return Response(ser_data.data,status=status.HTTP_201_CREATED)
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
-class AnswerUpdateView(APIView):    
+class AnswerUpdateView(APIView):   
+    '''
+    Update Comment's Answer.
+    '''
+ 
     permission_classes=[IsOwnerOrReadOnly,] 
+    serializer_class = AnswerSerializer
 
     def put(self,request,pk):
         answer=Answer.objects.get(pk=pk)
@@ -162,8 +239,13 @@ class AnswerUpdateView(APIView):
             return Response(ser_data.data,status=status.HTTP_201_CREATED)
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
-class AnswerDeleteView(APIView):   
+class AnswerDeleteView(APIView):  
+    '''
+    Delete Comment's Answer.
+    '''
+     
     permission_classes=[IsOwnerOrReadOnly,] 
+    serializer_class = AnswerSerializer
      
     def delete(self,request,pk):
         answer=Answer.objects.get(pk=pk)
