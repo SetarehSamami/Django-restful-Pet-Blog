@@ -2,6 +2,8 @@ from rest_framework.views import APIView
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated ,IsAdminUser
+from permissions import IsOwnerOrReadOnly
 from .models import Post, Category, Comment, Answer
 from .serializers import PostSerializer, CategorySerializer, CommentSerializer, AnswerSerializer
 
@@ -12,7 +14,9 @@ class PostListView(APIView):
         ser_data=PostSerializer(instance=post , many=True)
         return Response(data=ser_data.data)
 
-class PostCreateView(APIView):    
+class PostCreateView(APIView):   
+    permission_classes=[IsAuthenticated,] 
+
     def post(self,request):
         ser_data=PostSerializer(data=request.POST)
         if ser_data.is_valid():
@@ -20,18 +24,24 @@ class PostCreateView(APIView):
             return Response(ser_data.data,status=status.HTTP_201_CREATED)
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
-class PostUpdateView(APIView):    
+class PostUpdateView(APIView):
+    permission_classes=[IsOwnerOrReadOnly,] 
+    
     def put(self,request,pk):
         post=Post.objects.get(pk=pk)
+        self.check_object_permissions(request,post)
         ser_data=PostSerializer(instance=post, data=request.POST, partial=True)
         if ser_data.is_valid():
             ser_data.save()
             return Response(ser_data.data,status=status.HTTP_201_CREATED)
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
-class PostDeleteView(APIView):        
+class PostDeleteView(APIView):     
+    permission_classes=[IsOwnerOrReadOnly,] 
+   
     def delete(self,request,pk):
         post=Post.objects.get(pk=pk)
+        self.check_object_permissions(request,post)
         post.delete()
         return Response({'message':'post deleted!'}, status=status.HTTP_200_OK)
 
@@ -42,6 +52,8 @@ class CategoryListView(APIView):
         return Response(data=ser_data.data)
     
 class CategoryCreateView(APIView): 
+    permission_classes=[IsAdminUser,] 
+
     def post(self,request):
         ser_data=CategorySerializer(data=request.POST)
         if ser_data.is_valid():
@@ -49,7 +61,9 @@ class CategoryCreateView(APIView):
             return Response(ser_data.data,status=status.HTTP_201_CREATED)
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
-class CategoryUpdateView(APIView):    
+class CategoryUpdateView(APIView): 
+    permission_classes=[IsAdminUser,] 
+
     def put(self,request,pk):
         category=Category.objects.get(pk=pk)
         ser_data=CategorySerializer(instance=category, data=request.POST, partial=True)
@@ -59,6 +73,8 @@ class CategoryUpdateView(APIView):
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class CategoryDeleteView(APIView):
+    permission_classes=[IsAdminUser,] 
+
     def delete(self,request,pk):
         category=Category.objects.get(pk=pk)
         category.delete()
@@ -70,7 +86,9 @@ class CommentListView(APIView):
         ser_data=CommentSerializer(instance=comment , many=True)
         return Response(data=ser_data.data)
 
-class CommentCreateView(APIView):    
+class CommentCreateView(APIView):  
+    permission_classes=[IsAuthenticated,] 
+  
     def post(self,request):
         ser_data=CommentSerializer(data=request.POST)
         if ser_data.is_valid():
@@ -78,19 +96,25 @@ class CommentCreateView(APIView):
             return Response(ser_data.data,status=status.HTTP_201_CREATED)
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
-class CommentUpdateView(APIView):    
+class CommentUpdateView(APIView):
+    permission_classes=[IsOwnerOrReadOnly,] 
+    
     def put(self,request,pk):
         comment=Comment.objects.get(pk=pk)
+        self.check_object_permissions(request,comment)
         ser_data=CommentSerializer(instance=comment, data=request.POST, partial=True)
         if ser_data.is_valid():
             ser_data.save()
             return Response(ser_data.data,status=status.HTTP_201_CREATED)
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
-class CommentDeleteView(APIView):        
+class CommentDeleteView(APIView):  
+    permission_classes=[IsOwnerOrReadOnly,] 
+      
     def delete(self,request,pk):
-        post=Post.objects.get(pk=pk)
-        post.delete()
+        comment=Comment.objects.get(pk=pk)
+        self.check_object_permissions(request,comment)
+        comment.delete()
         return Response({'message':'Comment deleted!'}, status=status.HTTP_200_OK)
         
 class AnswerListView(APIView):
@@ -100,6 +124,8 @@ class AnswerListView(APIView):
         return Response(data=ser_data.data)
 
 class AnswerCreateView(APIView):    
+    permission_classes=[IsAuthenticated,] 
+
     def post(self,request):
         ser_data=AnswerSerializer(data=request.POST)
         if ser_data.is_valid():
@@ -108,18 +134,24 @@ class AnswerCreateView(APIView):
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class AnswerUpdateView(APIView):    
+    permission_classes=[IsOwnerOrReadOnly,] 
+
     def put(self,request,pk):
         answer=Answer.objects.get(pk=pk)
+        self.check_object_permissions(request,answer)
         ser_data=AnswerSerializer(instance=answer, data=request.POST, partial=True)
         if ser_data.is_valid():
             ser_data.save()
             return Response(ser_data.data,status=status.HTTP_201_CREATED)
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
-class AnswerDeleteView(APIView):        
+class AnswerDeleteView(APIView):   
+    permission_classes=[IsOwnerOrReadOnly,] 
+     
     def delete(self,request,pk):
-        post=Post.objects.get(pk=pk)
-        post.delete()
+        answer=Answer.objects.get(pk=pk)
+        self.check_object_permissions(request,answer)
+        answer.delete()
         return Response({'message':'Answer deleted!'}, status=status.HTTP_200_OK)
         
         

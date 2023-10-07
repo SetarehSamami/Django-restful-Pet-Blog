@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from .serializers import UserRegisterSerializer,UserUpdateSerializer
 from rest_framework import status
 from django.contrib.auth import get_user_model
+from rest_framework.permissions import IsAdminUser
 
 
 User = get_user_model()
@@ -17,18 +18,24 @@ class UserRegister(APIView):
         return Response(ser_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class Userview(APIView): 
+    permission_classes = [IsAdminUser]
+
     def get(self,request):
         register=User.objects.all()
         ser_data=UserRegisterSerializer(instance=register, many=True).data
         return Response(ser_data, status=status.HTTP_200_OK)
 
 class UserDelete(APIView):
+    permission_classes = [IsAdminUser]
+
     def delete(self,request,pk):
         user=User.objects.get(pk=pk)
         user.delete()
         return Response({'message':'user deleted!'}, status=status.HTTP_200_OK)
     
 class UserUpdate(APIView):
+    permission_classes = [IsAdminUser]
+
     def put(self,request,pk):
         user=User.objects.get(pk=pk)
         ser_data = UserUpdateSerializer(instance=user, data=request.POST, partial=True)
