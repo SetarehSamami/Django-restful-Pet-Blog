@@ -3,15 +3,20 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated ,IsAdminUser
+from rest_framework.pagination import PageNumberPagination
 from permissions import IsOwnerOrReadOnly
 from .models import Post, Category, Comment, Answer
 from .serializers import PostSerializer, CategorySerializer, CommentSerializer, AnswerSerializer
 
 
 class PostListView(APIView):
+    pagination_class= PageNumberPagination
+
     def get(self,request):
         post=Post.objects.all()
-        ser_data=PostSerializer(instance=post , many=True)
+        paginator = self.pagination_class()
+        result_page=paginator.paginate_queryset(post,request)
+        ser_data=PostSerializer(instance=result_page , many=True)
         return Response(data=ser_data.data)
 
 class PostCreateView(APIView):   
@@ -46,9 +51,13 @@ class PostDeleteView(APIView):
         return Response({'message':'post deleted!'}, status=status.HTTP_200_OK)
 
 class CategoryListView(APIView):
+    pagination_class= PageNumberPagination
+
     def get(self,request):
         category=Category.objects.all()
-        ser_data=CategorySerializer(instance=category , many=True)
+        paginator = self.pagination_class()
+        result_page=paginator.paginate_queryset(category,request)
+        ser_data=CategorySerializer(instance=result_page , many=True)
         return Response(data=ser_data.data)
     
 class CategoryCreateView(APIView): 
@@ -81,9 +90,13 @@ class CategoryDeleteView(APIView):
         return Response({'message':'Category deleted!'}, status=status.HTTP_200_OK)
 
 class CommentListView(APIView):
+    pagination_class= PageNumberPagination
+
     def get(self,request):
         comment=Comment.objects.all()
-        ser_data=CommentSerializer(instance=comment , many=True)
+        paginator = self.pagination_class()
+        result_page=paginator.paginate_queryset(comment,request)
+        ser_data=CommentSerializer(instance=result_page , many=True)
         return Response(data=ser_data.data)
 
 class CommentCreateView(APIView):  
@@ -118,9 +131,13 @@ class CommentDeleteView(APIView):
         return Response({'message':'Comment deleted!'}, status=status.HTTP_200_OK)
         
 class AnswerListView(APIView):
+    pagination_class= PageNumberPagination
+
     def get(self,request):
         answer=Answer.objects.all()
-        ser_data=AnswerSerializer(instance=answer , many=True)
+        paginator = self.pagination_class()
+        result_page=paginator.paginate_queryset(answer,request)
+        ser_data=AnswerSerializer(instance=result_page , many=True)
         return Response(data=ser_data.data)
 
 class AnswerCreateView(APIView):    
