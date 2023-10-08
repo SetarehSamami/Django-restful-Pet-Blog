@@ -15,7 +15,6 @@ class UserRegister(APIView):
     '''
     
     serializer_class = UserRegisterSerializer
-
     def post(self,request): 
         ser_data=UserRegisterSerializer(data=request.POST)
         if ser_data.is_valid():
