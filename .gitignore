@@ -1,4 +1,4 @@
-/venv
+venv/
 /petrestful/__pycache__
 /petrestful/accounts/__pycache__
 /petrestful/home/__pycache__
