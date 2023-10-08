@@ -74,7 +74,8 @@ refresh Token is valid for one day after that new Token should be taken.
 
 
 
-The API has some restrictions:
+
+### The API has some restrictions:
 -   The posts are always associated with a creator (user who created it).
 -   Only authenticated users may create posts.
 -   Only the creator of a post or comment may update or delete it.

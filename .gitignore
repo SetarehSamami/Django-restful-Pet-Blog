@@ -1,0 +1,6 @@
+/venv
+/petrestful/__pycache__
+/petrestful/accounts/__pycache__
+/petrestful/home/__pycache__
+/petrestful/petrestful/__pycache__
+/petrestful/.vscode
