@@ -69,10 +69,10 @@ WSGI_APPLICATION = 'petrestful.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'petpostgres',
-        'USER' : 'postgres',
-        'PASSWORD' : 'admin',
-        'HOST' :'127.0.0.1',
+        'NAME': 'bpostgres',
+        'USER' : 'bpostgres',
+        'PASSWORD' : 'bpostgres',
+        'HOST' :'bpostgres',
         'PORT' : '5432',
 
     }

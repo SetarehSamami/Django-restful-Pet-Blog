@@ -1,0 +1,38 @@
+services:
+  bpostgres:
+    container_name: bpostgres
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=bpostgres
+      - POSTGRES_USER=bpostgres
+      - POSTGRES_PASSWORD=bpostgres
+    networks:
+      - main
+    ports:
+      - "5432:5432"
+    user: root
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    
+  app:
+    build: .
+    command: sh -c "python manage.py migrate --run-syncdb && python manage.py migrate && gunicorn petrestful.wsgi -b :8000"
+    container_name: app
+    volumes:
+      - .:/code/
+    depends_on:
+      - bpostgres
+    expose:
+      - "8000"
+    networks:
+      - main
+    restart: always
+    links:
+      - bpostgres
+    
+networks:
+  main:
+  
+volumes:
+  postgres_data:
